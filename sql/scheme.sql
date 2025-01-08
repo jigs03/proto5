@@ -11,14 +11,12 @@ CREATE TABLE users (
 
 CREATE TABLE files (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    uploader_id INT NOT NULL,
+    uploader_role ENUM('Staf PPAP', 'Staf PAP', 'admin') NOT NULL,
     name VARCHAR(255) NOT NULL,
-    type VARCHAR(100),
-    size INT,
-    upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    role_access ENUM('admin', 'Staf PPAP', 'Staf PAP', 'all') NOT NULL,
-    FOREIGN KEY (uploader_id) REFERENCES users(id)
+    path VARCHAR(255) NOT NULL,
+    target_role ENUM('admin', 'Staf PPAP', 'Staf PAP', 'all') NOT NULL,
+    upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-);
-ALTER TABLE files ADD role_access ENUM('admin', 'Staf PPAP', 'Staf PAP', 'all') NOT NULL;
+
+

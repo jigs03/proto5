@@ -1,0 +1,175 @@
+/* General Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #F4A460, #DC143C, #F5DEB3);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 50px; /* Add padding to the bottom to prevent overlap */
+}
+.pagination a {
+    margin: 0 5px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #ffa16a;
+    background: #FFE5E5;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.pagination a:hover, .pagination a strong {
+    background: #FF6A88;
+    color: white;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #DC143C;
+    padding: 15px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+    color: white;
+    text-align: center;
+    display: block; 
+    margin: 0 auto;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s;
+    text-align: center;
+}
+
+.navbar a:hover {
+    color: #FFD1D1;
+}
+
+.container {
+    margin-top: 50px;
+    text-align: center;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    width: 70%;
+    max-width: 800px;
+    min-height: 300px; /* Add minimum height */
+}
+
+/* Headings */
+h1, h2 {
+    color: #dd002c;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 28px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+/* File List */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+li {
+    background: #FFE5E5;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+
+li a {
+    color: #dd002c;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+li a:hover {
+    text-decoration: underline;
+}
+
+/* Buttons */
+button, .upload-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #dd002c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover, .upload-btn:hover {
+    background-color: #FF9A8B;
+}
+
+/* Ensure buttons are not hidden */
+button, .upload-btn {
+    display: inline-block;
+}
+
+/* Input and Select */
+input[type="file"], select {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+}
+
+/* Notification */
+#notification {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #FF6A88;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+footer {
+    background-color: #DC143C;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    width: 100%;
+    position: relative; /* Change from fixed to relative */
+    bottom: 0;
+    left: 0;
+    margin-top: 20px; /* Add space between the footer and content */
+}

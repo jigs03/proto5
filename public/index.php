@@ -1,5 +1,10 @@
 <?php
 session_start();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_SESSION['role'] = $_POST['role'];
+    header("Location: dashboard.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,21 +12,22 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <header>
-        <h1>SMART DEGREE UPNM</h1>
-    </header>
-    <form action="login.php" method="post">
-        <h2>Login</h2>
-        <button type="submit" name="role" value="admin">Login as Admin</button>
-        <button type="submit" name="role" value="Staf PPAP">Login as Staf PPAP</button>
-        <button type="submit" name="role" value="Staf PAP">Login as Staf PAP</button>
-    </form>
-    <footer>
-        <p>&copy; 2025 SMART DEGREE UPNM</p>
-    </footer>
+    <div class="navbar">
+        <a href="#">SMART DEGREE UPNM</a>
+    </div>
+    <div class="container">
+        <h1>Login</h1>
+        <form method="post">
+            <select name="role" required>
+                <option value="admin">Admin</option>
+                <option value="Staf PPAP">Staf PPAP</option>
+                <option value="Staf PAP">Staf PAP</option>
+            </select>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 </body>
 </html>
-
