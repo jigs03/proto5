@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Welcome</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="#">SMART DEGREE UPNM</a>
     </div>
     <div class="container">
-        <h1>Login</h1>
+        <h1>welcome</h1>
         <h2><img src="upnm.jpg" alt="upnm Icon" style="width:300px ; height:150px;"></h2>
         <form method="post">
             <select name="role" required>

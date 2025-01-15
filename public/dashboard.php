@@ -4,26 +4,48 @@ if (!isset($_SESSION['role'])) {
     header("Location: index.php");
     exit;
 }
+
 $role = $_SESSION['role'];
 include '../config/db_connect.php';
 
+// Check database connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 // Pagination settings
-$filesPerPage = 5;
+$filesPerPage = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $filesPerPage;
 
 // Fetch files for admin or staff
 if ($role === 'admin') {
     $result = $conn->query("SELECT * FROM files WHERE target_role = 'admin' AND is_deleted = 0 LIMIT $filesPerPage OFFSET $offset");
-    $totalFiles = $conn->query("SELECT COUNT(*) as total FROM files WHERE target_role = 'admin' AND is_deleted = 0")->fetch_assoc()['total'];
+    if (!$result) {
+        die("Error executing query: " . $conn->error);
+    }
+    $totalFilesResult = $conn->query("SELECT COUNT(*) as total FROM files WHERE target_role = 'admin' AND is_deleted = 0");
+    if (!$totalFilesResult) {
+        die("Error executing query: " . $conn->error);
+    }
+    $totalFiles = $totalFilesResult->fetch_assoc()['total'];
 } else {
     $stmt = $conn->prepare("SELECT * FROM files WHERE (target_role = ? OR target_role = 'all') AND is_deleted = 0 LIMIT ? OFFSET ?");
+    if (!$stmt) {
+        die("Error preparing statement: " . $conn->error);
+    }
     $stmt->bind_param("sii", $role, $filesPerPage, $offset);
     $stmt->execute();
     $result = $stmt->get_result();
-    $totalFiles = $conn->query("SELECT COUNT(*) as total FROM files WHERE (target_role = '$role' OR target_role = 'all') AND is_deleted = 0")->fetch_assoc()['total'];
+    if (!$result) {
+        die("Error executing statement: " . $stmt->error);
+    }
+    $totalFilesResult = $conn->query("SELECT COUNT(*) as total FROM files WHERE (target_role = '$role' OR target_role = 'all') AND is_deleted = 0");
+    if (!$totalFilesResult) {
+        die("Error executing query: " . $conn->error);
+    }
+    $totalFiles = $totalFilesResult->fetch_assoc()['total'];
 }
-$totalPages = ceil($totalFiles / $filesPerPage);
 ?>
 
 <!DOCTYPE html>
@@ -112,14 +134,7 @@ $totalPages = ceil($totalFiles / $filesPerPage);
             </form>
         <?php endif; ?>
 
-        <!-- Pagination Controls -->
-        <div class="pagination">
-            <?php
-            for ($i = 1; $i <= $totalPages; $i++) {
-                echo "<a href='dashboard.php?page=$i'>" . ($i === $page ? "<strong>$i</strong>" : $i) . "</a> ";
-            }
-            ?>
-        </div>
+
     </div>
 
     <footer>
