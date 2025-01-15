@@ -36,11 +36,24 @@ $totalPages = ceil($totalFiles / $filesPerPage);
 </head>
 <body>
     <div class="navbar">
-        <a href="#">Dashboard</a>
+        <a href="dashboard.php">Dashboard</a>
         <a href="logout.php">Logout</a>
+        <a href="statistic.php">Statistic</a>
     </div>
     <div class="container">
         <h1>Welcome, <?php echo $role; ?></h1>
+
+        <?php if (isset($_GET['upload']) && $_GET['upload'] === 'success'): ?>
+            <div class="notification success">File uploaded successfully!</div>
+        <?php elseif (isset($_GET['upload']) && $_GET['upload'] === 'error'): ?>
+            <div class="notification error">Failed to upload file.</div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['download']) && $_GET['download'] === 'success'): ?>
+            <div class="notification success">File downloaded successfully!</div>
+        <?php elseif (isset($_GET['download']) && $_GET['download'] === 'error'): ?>
+            <div class="notification error">Failed to download file.</div>
+        <?php endif; ?>
 
         <?php if ($role === 'admin'): ?>
             <h2>Files Uploaded by Staff</h2>
@@ -78,7 +91,12 @@ $totalPages = ceil($totalFiles / $filesPerPage);
                 <?php
                 if ($result && $result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo "<li><a href='download.php?file={$row['path']}'>Download {$row['name']}</a></li>";
+                        echo "<li><a href='download.php?file={$row['path']}'>Download {$row['name']}</a>
+                                <form action='delete_file.php' method='post' style='display:inline;'>
+                                    <input type='hidden' name='file_id' value='{$row['id']}'>
+                                    <button type='submit'>Delete</button>
+                                </form>
+                              </li>";
                     }
                 } else {
                     echo "<li>No files available.</li>";
@@ -107,5 +125,13 @@ $totalPages = ceil($totalFiles / $filesPerPage);
     <footer>
         <p>&copy; 2025 SMART DEGREE UPNM</p>
     </footer>
+
+    <script>
+        // Hide notifications after 3 seconds
+        setTimeout(() => {
+            const notifications = document.querySelectorAll('.notification');
+            notifications.forEach(notification => notification.style.display = 'none');
+        }, 3000);
+    </script>
 </body>
 </html>

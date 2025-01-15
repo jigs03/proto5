@@ -12,7 +12,6 @@ if (file_exists($filePath)) {
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
     readfile($filePath);
-    header("Location: dashboard.php?download=success");
     exit;
 } else {
     header("Location: dashboard.php?download=error");

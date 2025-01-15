@@ -173,3 +173,10 @@ footer {
     left: 0;
     margin-top: 20px; /* Add space between the footer and content */
 }
+canvas,body {
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}

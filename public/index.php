@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="container">
         <h1>Login</h1>
+        <h2><img src="upnm.jpg" alt="upnm Icon" style="width:300px ; height:150px;"></h2>
         <form method="post">
             <select name="role" required>
                 <option value="admin">Admin</option>
