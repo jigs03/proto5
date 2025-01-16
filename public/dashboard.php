@@ -144,9 +144,9 @@ if ($role === 'admin') {
     <script>
         // Hide notifications after 3 seconds
         setTimeout(() => {
-            const notifications = document.querySelectorAll('.notification');
-            notifications.forEach(notification => notification.style.display = 'none');
-        }, 3000);
+            const notification = document.getElementById('notification');
+            if (notification) notification.style.display = 'none';
+        }, 6000);
     </script>
 </body>
 </html>

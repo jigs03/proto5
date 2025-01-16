@@ -5,6 +5,11 @@ if (!isset($_SESSION['role'])) {
     exit;
 }
 $role = $_SESSION['role'];
+
+// File paths
+$uploadDir = '../uploadsvg/';
+$fileUpu = $uploadDir . 'result.svg';
+$fileAsasi = $uploadDir . 'result2.svg';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +17,6 @@ $role = $_SESSION['role'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistic</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -22,133 +26,63 @@ $role = $_SESSION['role'];
         <a href="statistic.php">Statistic</a>
     </div>
     <div class="container">
-        <!-- First svg -->
+        <?php
+        // Display success or error messages
+        if (isset($_GET['success'])) {
+            echo "<p style='color: green;'>File uploaded successfully.</p>";
+        }
+        if (isset($_GET['error'])) {
+            $errorMessages = [
+                1 => "Failed to upload UPU file.",
+                2 => "Invalid file type for UPU.",
+                3 => "Failed to upload Asasi file.",
+                4 => "Invalid file type for Asasi.",
+            ];
+            $errorCode = (int)$_GET['error'];
+            if (isset($errorMessages[$errorCode])) {
+                echo "<p style='color: red;'>{$errorMessages[$errorCode]}</p>";
+            }
+        }
+        ?>
+        <!-- First SVG -->
         <h1>Results UPU</h1>
         <?php if ($role === 'admin'): ?>
-            <input type="file" id="fileInput" accept=".svg" />
+            <form action="save_svg.php" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".svg" />
+                <button type="submit">Upload</button>
+            </form>
         <?php endif; ?>
-        <div id="svgContainer"></div>
 
-        <!-- Second Chart -->
+        <div>
+            <?php if (file_exists($fileUpu)): ?>
+                <div><?php echo file_get_contents($fileUpu); ?></div>
+                <?php if ($role !== 'admin'): ?>
+                    <a href="<?php echo $fileUpu; ?>" download="result.svg">Download SVG</a>
+                <?php endif; ?>
+            <?php else: ?>
+                <p>No UPU SVG file found.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Second SVG -->
         <h2>Results Asasi</h2>
         <?php if ($role === 'admin'): ?>
-            <input type="file" id="fileInput2" accept=".svg" />
+            <form action="save_svg.php" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file2" accept=".svg" />
+                <button type="submit">Upload</button>
+            </form>
         <?php endif; ?>
-        <div id="svgContainer2"></div>
+
+        <div>
+            <?php if (file_exists($fileAsasi)): ?>
+                <div><?php echo file_get_contents($fileAsasi); ?></div>
+                <?php if ($role !== 'admin'): ?>
+                    <a href="<?php echo $fileAsasi; ?>" download="result2.svg">Download SVG</a>
+                <?php endif; ?>
+            <?php else: ?>
+                <p>No Asasi SVG file found.</p>
+            <?php endif; ?>
+        </div>
     </div>
-
-    <script>
-        // First svg file
-        document.getElementById('fileInput')?.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            
-            // Check if the file is an SVG
-            if (file && file.type === "image/svg+xml") {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    // Get the SVG content
-                    const svgContent = e.target.result;
-
-                    // Create a div to display the SVG
-                    const svgContainer = document.getElementById('svgContainer');
-                    svgContainer.innerHTML = svgContent;
-
-                    // Create a download link
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = URL.createObjectURL(new Blob([svgContent], { type: 'image/svg+xml' }));
-                    downloadLink.download = 'result.svg';  // Set the file name
-                    downloadLink.textContent = 'Download SVG';
-                    
-                    // Append the download link to the container
-                    svgContainer.appendChild(downloadLink);
-
-                    // Save the SVG content to the server
-                    fetch('save_svg.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type: 'upu', content: svgContent })
-                    });
-                };
-                
-                reader.readAsText(file);
-            } else {
-                alert("Please upload a valid SVG file.");
-            }
-        });
-
-        // Second svg file
-        document.getElementById('fileInput2')?.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            
-            // Check if the file is an SVG
-            if (file && file.type === "image/svg+xml") {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    // Get the SVG content
-                    const svgContent = e.target.result;
-
-                    // Create a div to display the SVG
-                    const svgContainer2 = document.getElementById('svgContainer2');
-                    svgContainer2.innerHTML = svgContent;
-
-                    // Create a download link
-                    const downloadLink2 = document.createElement('a');
-                    downloadLink2.href = URL.createObjectURL(new Blob([svgContent], { type: 'image/svg+xml' }));
-                    downloadLink2.download = 'result2.svg';  // Set the file name
-                    downloadLink2.textContent = 'Download SVG';
-                    
-                    // Append the download link to the container
-                    svgContainer2.appendChild(downloadLink2);
-
-                    // Save the SVG content to the server
-                    fetch('save_svg.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type: 'asasi', content: svgContent })
-                    });
-                };
-                
-                reader.readAsText(file);
-            } else {
-                alert("Please upload a valid SVG file.");
-            }
-        });
-
-        // Load existing SVGs for staff
-        window.addEventListener('load', function() {
-            if ('<?php echo $role; ?>' !== 'admin') {
-                fetch('get_svgs.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.upu) {
-                            document.getElementById('svgContainer').innerHTML = data.upu;
-                            const downloadLink = document.createElement('a');
-                            downloadLink.href = 'uploads/result.svg';
-                            downloadLink.download = 'result.svg';
-                            downloadLink.textContent = 'Download SVG';
-                            document.getElementById('svgContainer').appendChild(downloadLink);
-                        } else {
-                            document.getElementById('svgContainer').innerHTML = '<p>No SVG file uploaded.</p>';
-                        }
-                        if (data.asasi) {
-                            document.getElementById('svgContainer2').innerHTML = data.asasi;
-                            const downloadLink2 = document.createElement('a');
-                            downloadLink2.href = 'uploads/result2.svg';
-                            downloadLink2.download = 'result2.svg';
-                            downloadLink2.textContent = 'Download SVG';
-                            document.getElementById('svgContainer2').appendChild(downloadLink2);
-                        } else {
-                            document.getElementById('svgContainer2').innerHTML = '<p>No SVG file uploaded.</p>';
-                        }
-                    });
-            }
-        });
-    </script>
 </body>
 </html>
